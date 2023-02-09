@@ -43,8 +43,10 @@ class _HomeState extends State<Home> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(question,
-                          style: Theme.of(context).textTheme.displayMedium
+                          Flexible(
+                            child: Text(question,
+                            style: Theme.of(context).textTheme.displayMedium
+                            ),
                           ),
                         ],
                       ),
@@ -95,7 +97,7 @@ class _HomeState extends State<Home> {
                   : buttons[index]=='='
                   ? MyButtonEqual(
                     buttonTapped: (){
-
+                      equalPressed();
                     },
                     buttonText: buttons [index],
                   )
@@ -141,5 +143,16 @@ class _HomeState extends State<Home> {
         ),
       ),
       );
+  }
+  equalPressed(){
+    String finalQuestion = question;
+    finalQuestion = finalQuestion.replaceAll('x', '*');
+    Parser p = Parser();
+    Expression exp = p.parse(finalQuestion);
+    ContextModel c = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, c);
+    setState(() {
+      answer = eval.toString();
+    });
   }
 }
