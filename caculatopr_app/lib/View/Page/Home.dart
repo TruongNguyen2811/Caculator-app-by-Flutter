@@ -1,5 +1,6 @@
 import 'package:caculatopr_app/View/Components/Buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -9,6 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  var question = '0';
+  var answer = '0';
 
   final List<String> buttons = [
     'C', 'Del', '%','/',
@@ -30,7 +34,36 @@ class _HomeState extends State<Home> {
           width: myWidth,
           child: Column(
             children: [
-              Expanded(flex:3, child:Container(),),
+              Expanded(flex:3, child:Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: myWidth*0.05),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(question,
+                          style: Theme.of(context).textTheme.displayMedium
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: myWidth*0.05),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(answer,
+                          style: Theme.of(context).textTheme.displaySmall
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ),
               Expanded(flex:6 , 
               child:GridView.builder(
                 shrinkWrap: true,
@@ -42,15 +75,62 @@ class _HomeState extends State<Home> {
                   buttons[index] == 'x' ||
                   buttons[index] == '-' ||
                   buttons[index] == '+' ||
-                  buttons[index] == '%' ?
-                  MyButtonOperator(
+                  buttons[index] == '%' 
+                  ? MyButtonOperator(
+                    buttonTapped: () {
+                      if(question=='0'){
+                        question = '';
+                        setState(() {
+                          question = question + buttons[index];
+                        });
+                      }
+                      else {
+                        setState(() {
+                          question = question + buttons[index];
+                        });
+                      }
+                    },
                     buttonText: buttons[index],
                   )
                   : buttons[index]=='='
                   ? MyButtonEqual(
+                    buttonTapped: (){
+
+                    },
                     buttonText: buttons [index],
                   )
                   : MyButton(
+                    buttonTapped: (){
+                      if(buttons[index]=='C'){
+                        setState(() {
+                          question = '0';
+                          answer = '0';
+                        });
+                      }
+                      else if (buttons[index]=='Del'){
+                        setState(() {
+                          question = question.substring(0,question.length-1);
+                        });
+                        if(question==''){
+                          setState(() {
+                            question = '0';
+                          });
+                        }
+                      }
+                      else {
+                        if(question == '0'){
+                          question='';
+                          setState(() {
+                            question = question +buttons[index];
+                          });
+                        }
+                        else {
+                          setState(() {
+                            question = question +buttons[index];
+                          });
+                        }
+                      }
+                    },
                     buttonText: buttons[index],
                   );
                 })
